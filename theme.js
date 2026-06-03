@@ -6,11 +6,11 @@ if(localStorage.getItem("theme")==="light"){
 document.body.classList.add("light");
 
 if(btn){
-btn.innerHTML="☀️";
+btn.innerHTML="🌙";
 }
 }else{
 if(btn){
-btn.innerHTML="🌙";
+btn.innerHTML="☀️";
 }
 }
 
