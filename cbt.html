@@ -125,12 +125,13 @@ body{
             </div>
 
             <div class="border border-slate-200 rounded-xl p-3 space-y-2 bg-amber-50/50 border-amber-200">
-                <div class="flex items-center space-x-2 text-slate-900 font-bold text-sm"><i class="fa-solid fa-circle-info text-indigo-600"></i><span>Important Rules</span></div>
+                <div class="flex items-center space-x-2 text-slate-900 font-bold text-sm"><i class="fa-solid fa-circle-info text-indigo-600"></i><span>📌 Important Rules</span></div>
                 <ul class="space-y-1 text-[11px] text-slate-600 font-semibold leading-4 list-disc list-inside">
-                    <li>Each question carries exactly 1 mark.</li>
-                    <li>You can change your responses anytime before final submission.</li>
-                    <li>The test auto-submits instantly when the countdown timer hits zero.</li>
-                </ul>
+                    <ul class="space-y-2"><li>Each question carries <b>1 mark</b>.</li><li>There is <b>no negative marking</b>.</li><li>You may change your response before final submission.</li><li>The test will be submitted automatically when the timer reaches zero.</li><li>
+<span class="text-red-600 font-bold">Important:</span>
+Three instances of tab switching or window minimization will result in automatic submission.
+</li></ul>
+                    <li>
             </div>
 
             <div class="grid grid-cols-2 gap-4">
@@ -235,7 +236,7 @@ body{
     <div id="result-screen" class="hidden min-h-screen py-8 px-4 flex justify-center items-start overflow-y-auto">
         <div class="w-full max-w-xl bg-white border border-slate-200 rounded-2xl shadow-sm p-6 space-y-6 my-auto">
             <div class="text-center space-y-1 border-b border-slate-100 pb-4">
-                <h1 class="text-2xl font-bold text-slate-900">Examination Metrics</h1>
+                <h1 class="text-2xl font-bold text-slate-900">Test Performance Report</h1>
                 <p id="result-meta-title" class="text-sm text-slate-500 font-semibold"></p>
                 <p id="proctor-status-msg" class="text-xs text-slate-400 font-bold pt-1"></p>
             </div>
