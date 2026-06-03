@@ -30,7 +30,7 @@
         html,
 body{
     height:100%;
-    overflow:hidden;
+    overflow-x:hidden;
 }
 
 #test-screen{
@@ -54,6 +54,10 @@ body{
     opacity:1 !important;
     cursor:not-allowed;
     box-shadow:none !important;
+}
+#result-screen{
+    height:100dvh;
+    overflow-y:auto;
 }
         @media print { .no-print { display: none !important; } #result-screen { display: block !important; } }
         @media (max-width:768px){
