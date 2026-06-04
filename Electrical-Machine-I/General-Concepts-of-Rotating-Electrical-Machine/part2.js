@@ -482,7 +482,7 @@ num:138,
 question:`Which part of the DC machine is shown in the given figure.
 
 <div style="text-align:center;">
-<img src="../../Images/q138.png"
+<img src="/Youth-Publication/Images/q138.png">
 style="width:100%;max-width:500px;border:1px solid #ccc;border-radius:8px;padding:5px;background:white;display:block;margin:auto;">
 </div><br>`,
 
@@ -500,8 +500,7 @@ num:139,
 question:`An elementary cylindrical machine has one full-pitch coil in the stator, but the rotor may have (i) two poles or (ii) four poles of permanent magnets. The time-varying voltage that could be induced in the stator coil for one rotation of the rotor, which the rotor is revolving at a constant speed are shown in the figures A, B, C and D below:<br><br>
 
 <div style="text-align:center;">
-<img 
-src="../../Images/q139.png"
+<img src="/Youth-Publication/Images/q139.png">
 style="
 width:100%;
 max-width:500px;
