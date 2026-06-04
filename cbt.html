@@ -196,7 +196,6 @@ body{
                     </div>
                     <div id="options-container" class="space-y-2.5 pt-1"></div>
                 </main>
-                </main>
                 </div>
             
                 <footer class="bg-white border-t border-slate-200 p-4 lg:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 flex-none shadow-lg">
@@ -330,6 +329,7 @@ body{
                 document.getElementById('select-minutes').value = metaConfig.minutes;
             }
             updateDurationUI();
+            restoreExamState();
         }
         function updateDurationUI() {
             const h = document.getElementById('select-hours').value;
@@ -350,7 +350,53 @@ body{
                 showCustomModal("Security Warning", `Violation ${tabViolations}/3: Do not switch tabs.`, "warning", false, null);
             }
         });
-
+        function restoreExamState() {
+            if(localStorage.getItem("cbt_started") !== "true")
+                return;
+            document.getElementById('welcome-screen').classList.add('hidden');
+            document.getElementById('test-screen').classList.remove('hidden');
+            currentIdx =
+                parseInt(localStorage.getItem("cbt_currentIdx")) || 0;
+            try{
+                userResponses =
+                    JSON.parse(localStorage.getItem("cbt_answers") || "{}");
+            }catch{
+                userResponses = {};
+            }
+            totalSecondsLeft =
+                parseInt(localStorage.getItem("cbt_time")) || 3600;    
+            initPalettes();
+            renderQuestion();    
+            countdownInterval = setInterval(() => {
+                totalSecondsLeft--;
+                const h = Math.floor(totalSecondsLeft / 3600)
+                    .toString().padStart(2,'0');
+                const m = Math.floor((totalSecondsLeft % 3600)/60)
+                    .toString().padStart(2,'0');
+                const s = (totalSecondsLeft % 60)
+                    .toString().padStart(2,'0');
+                document.getElementById('countdown-timer').innerText =
+                    `${h}:${m}:${s}`;
+                saveExamState();
+                if(totalSecondsLeft <= 0){
+                    clearInterval(countdownInterval);
+                    autoSubmitTest("Time Expired");
+                }
+            },1000);
+        }
+        function saveExamState() {
+            localStorage.setItem("cbt_currentIdx", currentIdx);
+            localStorage.setItem("cbt_answers", JSON.stringify(userResponses));
+            localStorage.setItem("cbt_time", totalSecondsLeft);
+            localStorage.setItem("cbt_started", "true");
+        }
+        
+        function clearExamState() {
+            localStorage.removeItem("cbt_currentIdx");
+            localStorage.removeItem("cbt_answers");
+            localStorage.removeItem("cbt_time");
+            localStorage.removeItem("cbt_started");
+        }
         function startTest() {
             const hrs = parseInt(document.getElementById('select-hours').value) || 1;
             const mins = parseInt(document.getElementById('select-minutes').value) || 0;
@@ -359,14 +405,14 @@ body{
             document.getElementById('welcome-screen').classList.add('hidden');
             document.getElementById('test-screen').classList.remove('hidden');
 
-            initPalettes(); renderQuestion();
+            initPalettes(); renderQuestion(); saveExamState();
             if(countdownInterval) clearInterval(countdownInterval);
             countdownInterval = setInterval(() => {
                 totalSecondsLeft--;
                 const h = Math.floor(totalSecondsLeft / 3600).toString().padStart(2, '0');
                 const m = Math.floor((totalSecondsLeft % 3600) / 60).toString().padStart(2, '0');
                 const s = (totalSecondsLeft % 60).toString().padStart(2, '0');
-                document.getElementById('countdown-timer').innerText = `${h}:${m}:${s}`;
+                document.getElementById('countdown-timer').innerText = `${h}:${m}:${s}`; saveExamState();
                 if (totalSecondsLeft <= 0) { clearInterval(countdownInterval); autoSubmitTest("Time Expired"); }
             }, 1000);
         }
@@ -407,7 +453,7 @@ body{
             Object.entries(q.options).forEach(([key, value]) => {
                 const active = userResponses[currentIdx] === key;
                 const card = document.createElement('div');
-                card.onclick = () => { userResponses[currentIdx] = key; renderQuestion(); updatePaletteStyles(); };
+                card.onclick = () => { userResponses[currentIdx] = key; saveExamState(); renderQuestion(); updatePaletteStyles(); };
                 card.className = `option-card border rounded-xl p-4 flex items-center space-x-4 cursor-pointer transition-all bg-white ${active ? 'border-indigo-600 ring-2 ring-indigo-50 bg-indigo-50/10' : 'border-slate-200'}`;
                 card.innerHTML = `<div class="w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${active?'border-indigo-600 bg-indigo-600':'border-slate-300'}">${active?'<div class="w-1.5 h-1.5 bg-white rounded-full"></div>':''}</div><span class="text-xs font-bold text-slate-400">${key}.</span><span class="text-sm font-bold text-slate-800 option-text">${value}</span>`;
                 container.appendChild(card);
@@ -417,13 +463,14 @@ body{
             document.getElementById('next-text').innerText = (currentIdx === questions.length - 1) ? "Finish" : "Save & Next";
         }
 
-        function clearResponse() { delete userResponses[currentIdx]; renderQuestion(); updatePaletteStyles(); }
-        function navigateQuestion(dir) { if(dir===1 && currentIdx === questions.length-1) { triggerSubmit(); return; } currentIdx+=dir; renderQuestion(); updatePaletteStyles(); }
+        function clearResponse() { delete userResponses[currentIdx]; saveExamState(); renderQuestion(); updatePaletteStyles();}
+        function navigateQuestion(dir) { if(dir===1 && currentIdx===questions.length-1){ triggerSubmit(); return; } currentIdx += dir; saveExamState(); renderQuestion(); updatePaletteStyles(); }
         function toggleFullPalette() { document.getElementById('full-palette-drawer').classList.toggle('hidden'); }
-        function exitTest() { showCustomModal("Exit Portal", "Exit Session? Selection context state variables will be reset entirely.", "warning", true, () => window.location.reload()); }
+        function exitTest() { showCustomModal("Exit Portal","Exit Session? Selection context state variables will be reset entirely.","warning", true, () => { clearExamState(); window.location.reload();});}
         function triggerSubmit() { showCustomModal("Confirm Submission", "Are you ready to submit your answers for evaluation?", "info", true, () => autoSubmitTest("User Final Submission")); }
         
         function autoSubmitTest(status) {
+            clearExamState();
             examSubmitted = true; clearInterval(countdownInterval);
             document.getElementById('test-screen').classList.add('hidden');
             document.getElementById('result-screen').classList.remove('hidden');
