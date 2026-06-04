@@ -483,7 +483,6 @@ question:`Which part of the DC machine is shown in the given figure.
 
 <div style="text-align:center;">
 <img src="/Youth-Publication/Images/q138.png">
-style="width:100%;max-width:500px;border:1px solid #ccc;border-radius:8px;padding:5px;background:white;display:block;margin:auto;">
 </div><br>`,
 
 options:{
@@ -501,18 +500,7 @@ question:`An elementary cylindrical machine has one full-pitch coil in the stato
 
 <div style="text-align:center;">
 <img src="/Youth-Publication/Images/q139.png">
-style="
-width:100%;
-max-width:500px;
-border:1px solid #ccc;
-border-radius:8px;
-padding:5px;
-background:white;
-display:block;
-margin:auto;
-">
 </div>
-
 <br>
 
 Select the correct combination from the code given below:`,
